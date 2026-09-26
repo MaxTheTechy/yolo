@@ -35,7 +35,12 @@ YOLO_MODEL_PATH = os.environ.get("YOLO_MODEL_PATH", "models/yolov8s.pt")
 YOLO_IMGSZ = int(os.environ.get("YOLO_IMGSZ", "1280"))  # small/far/seated people need the higher resolution
 PERSON_CLASS_ID = 0
 CONFIDENCE_THRESHOLD = float(os.environ.get("CONFIDENCE_THRESHOLD", "0.3"))
-TORCH_THREADS = int(os.environ.get("TORCH_THREADS", "2"))  # per camera; torch otherwise grabs every host core
+TORCH_THREADS = int(os.environ.get("TORCH_THREADS", "2"))  # per detector worker; torch otherwise grabs every host core
+# shared detector pool (detector.DetectorPool): all cameras share a few model copies instead of one each
+DETECTOR_DEVICE = os.environ.get("DETECTOR_DEVICE", "auto")        # "auto" = first CUDA GPU if present, else "cpu"
+DETECTOR_WORKERS = int(os.environ.get("DETECTOR_WORKERS", "0"))    # 0 = auto: 1 on GPU, cores/TORCH_THREADS - 1 on CPU
+DETECTOR_BATCH = int(os.environ.get("DETECTOR_BATCH", "0"))        # 0 = auto: 8 on GPU, 1 on CPU
+DETECTOR_BATCH_WAIT_MS = int(os.environ.get("DETECTOR_BATCH_WAIT_MS", "20"))  # max wait to fill a GPU batch
 ZONE_CROP_MARGIN = 0.1           # detect only around the zone (fraction of frame width); full height is kept for bodies above feet
 
 DASHBOARD_HOST = "127.0.0.1"

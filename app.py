@@ -12,7 +12,7 @@ import config
 import database
 import occupancy
 import snapshots
-from detector import PersonDetector
+from detector import DetectorPool
 from source import is_youtube_url, resolve_stream_url
 from tracker import LineCounter, VisitTracker
 
@@ -42,10 +42,11 @@ def is_local_file(url):
 class CameraWorker(threading.Thread):
     """Reads one camera, runs YOLO + ByteTrack at TRACK_FPS, maintains visits for its zone."""
 
-    def __init__(self, camera, room):
+    def __init__(self, camera, room, detector):
         super().__init__(name=f"cam{camera.id}", daemon=True)
         self.camera = camera
         self.room = room
+        self.detector = detector  # shared DetectorPool
         self.signature = (camera.url, camera.zone, camera.room_id, camera.updated_at)
         self.stop_event = threading.Event()
         self.count = 0
@@ -72,7 +73,6 @@ class CameraWorker(threading.Thread):
     def run(self):
         import supervision as sv
 
-        detector = PersonDetector()
         entrance = self.camera.mode == "entrance"
         fps = config.ENTRANCE_TRACK_FPS if entrance else config.TRACK_FPS
         # supervision keeps lost tracks for int(frame_rate / 30 * lost_track_buffer) frames,
@@ -139,7 +139,7 @@ class CameraWorker(threading.Thread):
                     h, w = frame.shape[:2]
                     roi = line_roi(self.camera.line_def, w, h) if entrance else zone_roi(self.camera.zone_points, w, h)
                     imgsz = config.ENTRANCE_IMGSZ if entrance else config.YOLO_IMGSZ
-                    detections = byte_track.update_with_detections(detector.detect_sv(frame, roi, imgsz))
+                    detections = byte_track.update_with_detections(self.detector.detect_sv(frame, roi, imgsz))
                     self.detections = [(*box, 0.0) for box in detections.xyxy.tolist()]
                     if entrance:
                         events = line_counter.update(detections, w, h, now) if line_counter else []
@@ -187,7 +187,7 @@ class Supervisor:
                 del self.workers[cam_id]
         for cam_id, cam in wanted.items():
             if cam_id not in self.workers:
-                worker = CameraWorker(cam, rooms[cam.room_id])
+                worker = CameraWorker(cam, rooms[cam.room_id], self.detector)
                 worker.start()
                 self.workers[cam_id] = worker
         # keep room objects fresh (capacity/name edits)
@@ -218,6 +218,7 @@ class Supervisor:
 
     def run(self):
         database.init_db()
+        self.detector = DetectorPool()
         os.makedirs(config.SNAPSHOT_DIR, exist_ok=True)
         last_sync = last_sample = 0
         while not self.stop_event.is_set():
@@ -237,6 +238,7 @@ class Supervisor:
             worker.stop_event.set()
         for worker in self.workers.values():
             worker.join(timeout=30)
+        self.detector.stop()
 
 
 def line_roi(line, w, h):

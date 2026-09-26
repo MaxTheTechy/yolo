@@ -25,8 +25,19 @@ ByteTrack note: supervision keeps lost tracks for `int(frame_rate/30 × lost_tra
 frames, so the buffer is passed as `EXIT_GRACE_SECONDS × 30` to get the intended 20 s at any
 frame rate.
 
-### `detector.py`: YOLO wrapper
-`PersonDetector(model_path, confidence)` loads the Ultralytics YOLO model once per camera.
+### `detector.py`: YOLO wrapper and shared detector pool
+**`DetectorPool`** is created once by the Supervisor and shared by all camera workers (instead of
+one model per camera). Cameras call `pool.detect_sv(frame, roi, imgsz)` and wait for the result.
+A few detector threads, each with its own model copy, serve one queue:
+- **CPU:** `cores / TORCH_THREADS − 1` workers, batch size 1.
+- **GPU** (picked automatically when CUDA is available, FP16): 1 worker that batches up to 8
+  frames from different cameras.
+- Frames at different input sizes (entrance 640, zone 1280) are batched separately. Errors are
+  passed back to the camera that asked. `stop()` joins the threads, because exiting while one is
+  inside torch aborts the process.
+
+`PersonDetector(model_path, confidence, device)` loads one Ultralytics YOLO model.
+- `detect_batch(images, imgsz)` → one `supervision.Detections` per image.
 - `detect_sv(frame, roi=None, imgsz=None)` → `supervision.Detections` of people only. With
   `roi`, it detects on that crop and shifts the boxes back to full-frame coordinates. `imgsz` is
   the model input size (the image is scaled up or down to fit).

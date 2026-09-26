@@ -13,7 +13,11 @@ for dashboard or timezone settings) after changing `.env`.
 | `TRACK_FPS` | 1 | ✓ | Frames per second analysed per zone camera |
 | `ENTRANCE_TRACK_FPS` | 3 | ✓ | Frames per second for entrance cameras. People cross a door in 1–2 s |
 | `ENTRANCE_IMGSZ` | 640 | ✓ | People at a door are large, so this is enough and about 3.5× faster |
-| `TORCH_THREADS` | 2 | ✓ | CPU threads per camera for analysis |
+| `TORCH_THREADS` | 2 | ✓ | CPU threads per detector worker |
+| `DETECTOR_DEVICE` | auto | ✓ | `auto` = first CUDA GPU if present, else `cpu`. Or `cuda:0`, `cpu` |
+| `DETECTOR_WORKERS` | 0 (auto) | ✓ | Shared model copies. Auto: 1 on GPU, `cores / TORCH_THREADS − 1` on CPU (3 on 8 cores) |
+| `DETECTOR_BATCH` | 0 (auto) | ✓ | Frames per model call. Auto: 8 on GPU, 1 on CPU (batching slows the CPU down) |
+| `DETECTOR_BATCH_WAIT_MS` | 20 | ✓ | Longest wait to fill a GPU batch |
 | `ZONE_CROP_MARGIN` | 0.1 | | Margin around the zone/line x-range when cropping |
 | `MIN_DWELL_SECONDS` | 60 | | Default min stay for new rooms (set per room on `/admin`) |
 | `EXIT_GRACE_SECONDS` | 20 | | How long a person may vanish (occlusion) before counting as gone |
