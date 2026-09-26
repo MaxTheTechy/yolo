@@ -10,7 +10,7 @@ for dashboard or timezone settings) after changing `.env`.
 | `YOLO_MODEL_PATH` | `models/yolov8s.pt` | ✓ | `yolov8n` is about 2× faster but misses more seated or partly hidden people |
 | `YOLO_IMGSZ` | 1280 | ✓ | Model input size for zone cameras. Higher finds smaller people but costs more CPU |
 | `CONFIDENCE_THRESHOLD` | 0.3 | ✓ | Lower finds more people but gives more false boxes |
-| `TRACK_FPS` | 1 | ✓ | Frames per second analysed per zone camera |
+| `TRACK_FPS` | 1 | ✓ | Default frames per second analysed per zone camera (override per camera: **Analyse every (s)** on `/admin`) |
 | `ENTRANCE_TRACK_FPS` | 3 | ✓ | Frames per second for entrance cameras. People cross a door in 1–2 s |
 | `ENTRANCE_IMGSZ` | 640 | ✓ | People at a door are large, so this is enough and about 3.5× faster |
 | `TORCH_THREADS` | 2 | ✓ | CPU threads per detector worker |

@@ -43,6 +43,7 @@ class Camera(Base):
     mode = Column(String(10), nullable=False, default="zone")  # "zone" (count people in view) or "entrance" (count line crossings)
     zone = Column(Text, nullable=True)  # JSON [[x, y], ...] normalised 0..1; NULL = whole frame
     line = Column(Text, nullable=True)  # entrance mode: JSON {"a": [x, y], "b": [x, y], "inside": [x, y]} normalised 0..1
+    frame_interval = Column(Float, nullable=True)  # seconds between analysed frames; NULL = TRACK_FPS / ENTRANCE_TRACK_FPS
     enabled = Column(Boolean, nullable=False, default=True)
     updated_at = Column(DateTime, nullable=False, default=datetime.utcnow)
     last_seen = Column(DateTime, nullable=True)
@@ -113,6 +114,8 @@ def init_db():
             conn.execute(text("ALTER TABLE camera ADD COLUMN mode VARCHAR(10) NOT NULL DEFAULT 'zone'"))
         if "line" not in camera_cols:
             conn.execute(text("ALTER TABLE camera ADD COLUMN line TEXT"))
+        if "frame_interval" not in camera_cols:
+            conn.execute(text("ALTER TABLE camera ADD COLUMN frame_interval FLOAT"))
     _seed_default_room()
     _close_orphaned_visits()
 

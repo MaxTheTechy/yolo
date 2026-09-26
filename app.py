@@ -55,6 +55,7 @@ class CameraWorker(threading.Thread):
         self.detections = []
 
     def online(self):
+        # "online" = the stream is still delivering video, even if we only analyse a frame every N seconds
         return self.last_frame_at and time.time() - self.last_frame_at < config.CAMERA_OFFLINE_SECONDS
 
     def open_capture(self):
@@ -74,7 +75,10 @@ class CameraWorker(threading.Thread):
         import supervision as sv
 
         entrance = self.camera.mode == "entrance"
-        fps = config.ENTRANCE_TRACK_FPS if entrance else config.TRACK_FPS
+        if self.camera.frame_interval:  # per-camera setting from /admin, e.g. every 10 s for a classroom
+            fps = 1.0 / self.camera.frame_interval
+        else:
+            fps = config.ENTRANCE_TRACK_FPS if entrance else config.TRACK_FPS
         # supervision keeps lost tracks for int(frame_rate / 30 * lost_track_buffer) frames,
         # so the buffer is given in 30fps units to get EXIT_GRACE_SECONDS at any fps
         byte_track = sv.ByteTrack(frame_rate=fps,
@@ -107,6 +111,7 @@ class CameraWorker(threading.Thread):
                     for _ in range(file_skip - 1):
                         cap.grab()
                     ok, frame = cap.read()
+                    self.last_frame_at = time.time()
                     if not ok:
                         cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
                         continue
@@ -122,6 +127,7 @@ class CameraWorker(threading.Thread):
                             time.sleep(1)
                         continue
                     failures = 0
+                    self.last_frame_at = time.time()
                     if bursty:
                         frame_no += 1
                         if frame_no % file_skip:
@@ -133,7 +139,6 @@ class CameraWorker(threading.Thread):
                         continue
 
                 last_processed = time.time()
-                self.last_frame_at = last_processed
                 now = datetime.utcnow()
                 try:
                     h, w = frame.shape[:2]

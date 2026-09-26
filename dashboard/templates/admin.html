@@ -31,7 +31,7 @@
 
   <h2>Cameras <small>(max {{ max_cameras }} per room; each camera counts only inside its own zone, room total = sum)</small></h2>
   <table id="cameras-table">
-    <thead><tr><th>Room</th><th>Name</th><th>Stream</th><th>Zone</th><th>Status</th><th></th></tr></thead>
+    <thead><tr><th>Room</th><th>Name</th><th>Stream</th><th>Zone</th><th>Analyse every</th><th>Status</th><th></th></tr></thead>
     <tbody></tbody>
   </table>
   <form id="camera-form" class="toolbar">
@@ -41,6 +41,8 @@
     <label title="Zone: counts people visible inside an area. Entrance: counts people crossing a line (room count = in - out).">Type
       <select name="mode"><option value="zone">Zone (people in view)</option><option value="entrance">Entrance (in/out line)</option></select></label>
     <label class="grow">Stream URL <input name="url" placeholder="rtsp://... (leave blank to keep current)"></label>
+    <label title="Seconds between analysed frames. Blank = default (zone 1 s, entrance 0.33 s). Classrooms: 5-10 s is enough and saves CPU; entrances need the default.">Analyse every (s)
+      <input name="frame_interval" type="number" min="0.2" max="600" step="0.1" placeholder="default" style="width:6em"></label>
     <label><input name="enabled" type="checkbox" checked> Enabled</label>
     <button type="submit">Save camera</button>
     <button type="reset">New</button>

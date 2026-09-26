@@ -21,6 +21,7 @@ column, restart the capture service **before** the dashboard, because the dashbo
 |---|---|
 | `id`, `room_id`, `name`, `url`, `enabled` | URL: RTSP, YouTube (testing) or a local file path. Shown masked in the UI |
 | `mode` | `zone` or `entrance` |
+| `frame_interval` | Seconds between analysed frames. NULL = default (`TRACK_FPS` / `ENTRANCE_TRACK_FPS`). For example 10 for a classroom |
 | `zone` | JSON `[[x, y], …]` normalised 0..1. NULL = whole frame (zone mode) |
 | `line` | JSON `{"a": [x, y], "b": [x, y], "inside": [x, y]}` (entrance mode) |
 | `updated_at` | Changing it makes the Supervisor restart the camera |

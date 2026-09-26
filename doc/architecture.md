@@ -36,6 +36,10 @@ open stream (source.resolve_stream_url: YouTube → direct URL, others unchanged
        entrance mode  tracker.LineCounter    feet point changes side of the line → IN / OUT event
 ```
 
+Each camera's analysis rate is its **Analyse every (s)** setting on `/admin`, or the default for its
+mode (zone 1 s, entrance 0.33 s). Classrooms work well at 5–10 s, which cuts CPU use 5–10×. A
+camera counts as online while its stream delivers video, however rarely frames are analysed.
+
 Every 30 s (`SAMPLE_INTERVAL_SECONDS`) the Supervisor writes one `room_occupancy` row per room.
 It skips the sample if any camera that counts for that room is offline (no frame for 15 s), so a
 gap in the data means an outage, never a false zero.

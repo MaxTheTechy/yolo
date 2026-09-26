@@ -287,7 +287,7 @@ def admin_state():
                    "close_time": r.close_time, "min_dwell_seconds": r.min_dwell_seconds,
                    "door_count": r.door_count} for r in database.list_rooms()],
         "cameras": [{"id": c.id, "room_id": c.room_id, "name": c.name, "url": mask_url(c.url), "zone": c.zone_points,
-                     "mode": c.mode, "line": c.line_def,
+                     "mode": c.mode, "line": c.line_def, "frame_interval": c.frame_interval,
                      "enabled": c.enabled, "online": bool(c.enabled and c.last_seen and c.last_seen > online_after),
                      "last_seen": utc_iso(c.last_seen), "last_error": c.last_error}
                     for c in database.list_cameras()],
@@ -348,6 +348,12 @@ def admin_save_camera():
                 if len(zone) < 3:
                     raise ValueError("A zone needs at least 3 points")
             fields["zone"] = json.dumps(zone) if zone else None
+        if "frame_interval" in data:  # blank/None = default rate for the camera type
+            interval = data["frame_interval"]
+            interval = float(interval) if interval not in (None, "") else None
+            if interval is not None and not 0.2 <= interval <= 600:
+                raise ValueError("Analyse every: between 0.2 and 600 seconds (or blank for the default)")
+            fields["frame_interval"] = interval
         if "mode" in data:
             if data["mode"] not in ("zone", "entrance"):
                 raise ValueError("Camera type must be zone or entrance")

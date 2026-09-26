@@ -225,3 +225,4 @@ gunicorn --bind 127.0.0.1:5000 dashboard.app:app
 Full docs in `doc/` (architecture, modules, database, configuration, operations, Azure integration plan).
 - Entrance counting is journey-based (2026-09-26): a crossing counts after JOURNEY_SETTLE_SECONDS on the new side or vanishing there; hesitations and hovering count nothing.
 - Shared DetectorPool (2026-09-26): all cameras share a few model copies (CPU) or one batched GPU model; memory no longer grows per camera. GPU used automatically when CUDA is present.
+- Per-camera analysis interval (camera.frame_interval, admin "Analyse every (s)"), 2026-09-26. Online = stream delivering video, not last analysed frame.

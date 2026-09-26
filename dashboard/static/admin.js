@@ -71,6 +71,7 @@ async function load() {
     cell(tr, c.url);
     if (c.mode === "entrance") cell(tr, c.line ? "entrance line" : "entrance - no line yet").className = c.line ? "" : "bad";
     else cell(tr, c.zone ? `${c.zone.length} points` : "whole frame");
+    cell(tr, c.frame_interval ? `${c.frame_interval} s` : `default (${c.mode === "entrance" ? "0.33" : "1"} s)`);
     const status = !c.enabled ? "disabled" : c.online ? "online" : `offline${c.last_error ? " - " + c.last_error : ""}`;
     cell(tr, status).className = c.online ? "ok" : "bad";
     const actions = cell(tr, "");
@@ -134,6 +135,7 @@ cameraForm.addEventListener("submit", async (e) => {
       id: f.id.value ? Number(f.id.value) : null,
       room_id: Number(f.room_id.value), name: f.name.value, url: f.url.value, enabled: f.enabled.checked,
       mode: f.mode.value,
+      frame_interval: f.frame_interval.value === "" ? null : Number(f.frame_interval.value),
     });
     cameraForm.reset();
     flash("Camera saved. The capture service picks up changes within 30s.");
