@@ -226,3 +226,13 @@ Full docs in `doc/` (architecture, modules, database, configuration, operations,
 - Entrance counting is journey-based (2026-09-26): a crossing counts after JOURNEY_SETTLE_SECONDS on the new side or vanishing there; hesitations and hovering count nothing.
 - Shared DetectorPool (2026-09-26): all cameras share a few model copies (CPU) or one batched GPU model; memory no longer grows per camera. GPU used automatically when CUDA is present.
 - Per-camera analysis interval (camera.frame_interval, admin "Analyse every (s)"), 2026-09-26. Online = stream delivering video, not last analysed frame.
+
+## Pending at end of 2026-09-26 session
+
+- User to run: `git push -u origin main` (public repo github.com/MaxTheTechy/yolo; agent push was blocked
+  by permissions). Local commits ahead of origin.
+- User to run capture then dashboard restart to pick up: detector pool, per-camera interval (new
+  `camera.frame_interval` column — capture first so it migrates).
+- Deferred by user ("not yet"): room_occupancy index + SQLite WAL, building overview page, camera-offline
+  alerts, YouTube reader via yt-dlp+ffmpeg, GPU purchase (RTX A2000 12GB suggested).
+- `.env` has `DOOR_COUNT_ALLOW_NEGATIVE=true` for the footpath test — remove for real rooms.
