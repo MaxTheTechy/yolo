@@ -236,3 +236,6 @@ Full docs in `doc/` (architecture, modules, database, configuration, operations,
 - Deferred by user ("not yet"): room_occupancy index + SQLite WAL, building overview page, camera-offline
   alerts, YouTube reader via yt-dlp+ffmpeg, GPU purchase (RTX A2000 12GB suggested).
 - `.env` has `DOOR_COUNT_ALLOW_NEGATIVE=true` for the footpath test — remove for real rooms.
+- Decision (2026-09-26): no face recognition / cross-camera person IDs (biometric special-category data,
+  Protection of Freedoms Act 2012 for pupils). Goal is "booked vs attended" counts per session only:
+  camera counts + booking/timetable data, no individual tracking. Not started — user said no further actions for now.
