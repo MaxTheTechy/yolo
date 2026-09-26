@@ -1,0 +1,11 @@
+<nav class="nav">
+  {% if all_rooms|length > 1 %}
+  <select onchange="location.href='/?room=' + this.value">
+    {% for r in all_rooms %}<option value="{{ r.id }}" {% if room_id is defined and r.id == room_id %}selected{% endif %}>{{ r.name }}</option>{% endfor %}
+  </select>
+  {% endif %}
+  <a href="/">Live</a>
+  <a href="/reports">Reports</a>
+  <a href="/admin">Admin</a>
+  <a href="/logout">Logout</a>
+</nav>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Reports - Classroom Occupancy</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="topbar">
+    <h1>Daily Occupancy Report</h1>
+    {% include "_nav.html" %}
+  </div>
+
+  <form id="report-form" class="toolbar">
+    <label>Room
+      <select name="room">
+        {% for r in all_rooms %}<option value="{{ r.id }}" data-open="{{ r.open_time }}" data-close="{{ r.close_time }}" {% if r.id == room.id %}selected{% endif %}>{{ r.name }}</option>{% endfor %}
+      </select>
+    </label>
+    <label>From <input type="date" name="from" value="{{ date_from }}"></label>
+    <label>To <input type="date" name="to" value="{{ date_to }}"></label>
+    <label>Between <input type="time" name="open" value="{{ room.open_time }}"></label>
+    <label>and <input type="time" name="close" value="{{ room.close_time }}"></label>
+    <button type="submit">Run</button>
+    <button type="button" id="export-csv">Export CSV</button>
+  </form>
+  <p class="hint">{% if entrance %}Computed from people crossing the entrance line (in minus out, never below 0).{% else %}Computed from in/out visits: anyone in the room for less than {{ min_dwell }}s is not counted.{% endif %}
+    "Peak duration" is the longest continuous stretch at the day's max; "Data coverage" is how much of the window the cameras were online.</p>
+
+  <div class="table-wrap">
+    <table id="report-table">
+      <thead><tr>{% for key, label in columns %}{% if key not in ("room", "window") %}<th>{{ label }}</th>{% endif %}{% endfor %}</tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <script>window.REPORT_COLUMNS = {{ columns | map('first') | reject('in', ['room', 'window']) | list | tojson }};</script>
+  <script src="/static/reports.js"></script>
+</body>
+</html>

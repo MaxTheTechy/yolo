@@ -1,0 +1,9 @@
+ultralytics
+opencv-python-headless
+flask
+gunicorn
+sqlalchemy
+python-dotenv
+supervision
+yt-dlp
+pandas

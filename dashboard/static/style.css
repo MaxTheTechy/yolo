@@ -1,0 +1,180 @@
+body {
+  font-family: sans-serif;
+  margin: 2rem;
+}
+
+.current {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.metric {
+  text-align: center;
+}
+
+.metric span {
+  display: block;
+  font-size: 2.5rem;
+  font-weight: bold;
+}
+
+.metric label {
+  color: #666;
+}
+
+.metric.small span {
+  font-size: 1.2rem;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.login-body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 280px;
+}
+
+.login-form input {
+  padding: 0.5rem;
+  font-size: 1rem;
+}
+
+.login-form button {
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.login-form .error {
+  color: #c0392b;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  max-width: 600px;
+}
+
+.hourly-section {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+.hourly-section table {
+  flex: 1;
+}
+
+.hourly-chart-wrap {
+  flex: 1;
+  max-width: 320px;
+}
+
+.hourly-chart-wrap svg {
+  width: 100%;
+  height: auto;
+  background: #fafafa;
+  border: 1px solid #eee;
+}
+
+.snapshot-panel {
+  margin-top: 1rem;
+}
+
+.snapshot-panel h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+}
+
+#latest-snapshot {
+  width: 100%;
+  border: 1px solid #eee;
+  display: block;
+  min-height: 80px;
+  background: #fafafa;
+}
+
+.snapshot-caption {
+  color: #666;
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 0.5rem;
+  text-align: left;
+}
+
+.nav {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: end;
+  margin: 1rem 0;
+}
+
+.toolbar label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.toolbar label.grow {
+  flex: 1;
+  min-width: 16rem;
+}
+
+.hint {
+  color: #666;
+  font-size: 0.85rem;
+}
+
+.hint.error, td.bad {
+  color: #b91c1c;
+}
+
+td.ok {
+  color: #15803d;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.zone-wrap {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+}
+
+.zone-wrap img {
+  display: block;
+  max-width: 100%;
+}
+
+.zone-wrap canvas {
+  position: absolute;
+  inset: 0;
+  cursor: crosshair;
+}

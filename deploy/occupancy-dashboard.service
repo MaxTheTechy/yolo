@@ -1,0 +1,15 @@
+[Unit]
+Description=Classroom Occupancy - dashboard (gunicorn)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=yolo
+WorkingDirectory=/home/yolo/yolo
+ExecStart=/home/yolo/yolo/.venv/bin/gunicorn --workers 2 --bind 127.0.0.1:5000 dashboard.app:app
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

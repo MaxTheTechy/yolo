@@ -1,0 +1,21 @@
+.venv/
+__pycache__/
+*.pyc
+*.db
+logs/
+models/*.pt
+.env
+snapshots/
+datasets/
+
+# never commit credentials: Cloudflare tunnel, TLS/SSH keys, local env variants
+.cloudflared/
+cloudflared/
+*cloudflared*.json
+cert.pem
+*.pem
+*.key
+id_rsa*
+id_ed25519*
+.env.*
+!.env.example

@@ -1,0 +1,15 @@
+[Unit]
+Description=Classroom Occupancy - capture/detect loop
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=yolo
+WorkingDirectory=/home/yolo/yolo
+ExecStart=/home/yolo/yolo/.venv/bin/python3 /home/yolo/yolo/app.py
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

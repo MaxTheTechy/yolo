@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Admin - Classroom Occupancy</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="topbar">
+    <h1>Rooms &amp; Cameras</h1>
+    {% include "_nav.html" %}
+  </div>
+  <p id="admin-msg" class="hint"></p>
+
+  <h2>Rooms</h2>
+  <table id="rooms-table">
+    <thead><tr><th>Name</th><th>Capacity</th><th>Report hours</th><th>Min stay</th><th>Cameras</th><th></th></tr></thead>
+    <tbody></tbody>
+  </table>
+  <form id="room-form" class="toolbar">
+    <input type="hidden" name="id">
+    <label>Name <input name="name" required maxlength="50"></label>
+    <label>Capacity <input name="capacity" type="number" min="1" required></label>
+    <label>From <input name="open_time" type="time" value="07:00" required></label>
+    <label>To <input name="close_time" type="time" value="17:00" required></label>
+    <label title="People in the zone for less than this are not counted (e.g. someone passing through)">Min stay (s)
+      <input name="min_dwell_seconds" type="number" min="0" max="3600" value="{{ min_dwell_default }}" required></label>
+    <button type="submit">Save room</button>
+    <button type="reset">New</button>
+  </form>
+
+  <h2>Cameras <small>(max {{ max_cameras }} per room; each camera counts only inside its own zone, room total = sum)</small></h2>
+  <table id="cameras-table">
+    <thead><tr><th>Room</th><th>Name</th><th>Stream</th><th>Zone</th><th>Status</th><th></th></tr></thead>
+    <tbody></tbody>
+  </table>
+  <form id="camera-form" class="toolbar">
+    <input type="hidden" name="id">
+    <label>Room <select name="room_id" required></select></label>
+    <label>Name <input name="name" required maxlength="50"></label>
+    <label title="Zone: counts people visible inside an area. Entrance: counts people crossing a line (room count = in - out).">Type
+      <select name="mode"><option value="zone">Zone (people in view)</option><option value="entrance">Entrance (in/out line)</option></select></label>
+    <label class="grow">Stream URL <input name="url" placeholder="rtsp://... (leave blank to keep current)"></label>
+    <label><input name="enabled" type="checkbox" checked> Enabled</label>
+    <button type="submit">Save camera</button>
+    <button type="reset">New</button>
+  </form>
+
+  <section id="zone-editor" hidden>
+    <h2><span id="zone-title">Zone</span> for <span id="zone-camera-name"></span></h2>
+    <p class="hint" id="zone-hint-zone">Click on the image to outline the area this camera is responsible for (people are counted by where their feet are).
+      The preview refreshes every 30s while the camera is running.</p>
+    <p class="hint" id="zone-hint-entrance" hidden>Click twice to draw the entrance line across the doorway at floor level (where feet cross it),
+      then click once on the side that is <b>inside the room</b>. Someone crossing towards that side counts as IN, the other way as OUT.
+      The preview refreshes every 30s while the camera is running.</p>
+    <div class="zone-wrap">
+      <img id="zone-img" alt="Waiting for first camera frame...">
+      <canvas id="zone-canvas"></canvas>
+    </div>
+    <div class="toolbar">
+      <button id="zone-undo" type="button">Undo point</button>
+      <button id="zone-clear" type="button">Clear points</button>
+      <button id="zone-save" type="button">Save</button>
+      <button id="zone-remove" type="button">Remove zone (count whole frame)</button>
+      <button id="zone-close" type="button">Close</button>
+    </div>
+  </section>
+
+  <script src="/static/admin.js"></script>
+</body>
+</html>
