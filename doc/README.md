@@ -11,7 +11,7 @@ login-protected web dashboard with live figures, hourly and daily stats, and dai
 | [database.md](database.md) | Tables, columns, and how each one is written and read |
 | [configuration.md](configuration.md) | Every setting in `config.py` / `.env` and when to change it |
 | [operations.md](operations.md) | Install, deploy, restart, logs, and troubleshooting (DNS, YouTube streams, CPU) |
-| [azure-integration-plan.md](azure-integration-plan.md) | Plan for moving to a serverless Azure design using Azure AI Vision and other Microsoft services |
+| [azure-integration-plan.md](azure-integration-plan.md) | Plan for moving to a serverless Azure design with Microsoft Foundry (agent, Azure ML) and a serverless cloud detector |
 
 ## At a glance
 
